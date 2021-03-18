@@ -25,9 +25,11 @@ let currentPose = "";
 let poseResult = "";
 
 function setup() {
-    createCanvas(640, 480);
+    let canvas = createCanvas(800, 600);
+    canvas.position(375, 50);
     video = createCapture(VIDEO);
     video.hide();
+    video.size(800,600);
     poseNet = ml5.poseNet(video, modelLoaded);
     poseNet.on('pose', gotPoses);
     // frameRate(30);
@@ -41,9 +43,9 @@ function setup() {
 
     brain = ml5.neuralNetwork(options);
     const modelInfo = {
-        model: 'model/model/model.json',
-        metadata: 'model/model/model_meta.json',
-        weights: 'model/model/model.weights.bin',
+        model: 'model/model.json',
+        metadata: 'model/model_meta.json',
+        weights: 'model/model.weights.bin',
     };
     brain.load(modelInfo, brainLoaded);
 }
@@ -57,22 +59,22 @@ function brainLoaded() {
 function keyPressed(){
     // mimics user picking a pose to perform
     if(keyCode === 49){ // denotes 1
-        currentPose = 'Mountain';
+        currentPose = poses[0];
     }
     else if(keyCode === 50){ // denotes 2
-        currentPose = 'Tree';
+        currentPose = poses[1];
     }
     else if(keyCode === 51){ // denotes 3
-        currentPose = 'Goddess';
+        currentPose = poses[2];
     }
     else if(keyCode === 52){ // denotes 4
-        currentPose = 'Warrior 2';
+        currentPose = poses[3];
     }
     console.log(currentPose);
 }
 
 function calculate_angle(P1,P2,P3) {
-    var angle = (
+    let angle = (
         Math.atan2(
             P2.position.y - P1.position.y,
             P2.position.x - P1.position.x
@@ -87,7 +89,7 @@ function calculate_angle(P1,P2,P3) {
     } else {
         angle = 90 - angle;
     }
-    return angle.toFixed(4); //Rounds the angle to 4 decimal places
+    return angle;
 }
 
 function classifyPose(){
@@ -98,55 +100,57 @@ function classifyPose(){
         // angle is denoted by angle(P1,P2,P3) where P1 is the 'origin'
         let lKnee_lAnkle_lHip = calculate_angle(pose.keypoints[13], pose.keypoints[15], pose.keypoints[11]);
         let rKnee_rAnkle_rHip = calculate_angle(pose.keypoints[14], pose.keypoints[16], pose.keypoints[12]);
-        let a0 = inputs.push(lKnee_lAnkle_lHip);
-        let a1 = inputs.push(rKnee_rAnkle_rHip);
+        inputs.push(lKnee_lAnkle_lHip);
+        inputs.push(rKnee_rAnkle_rHip);
 
         let lHip_lKnee_lShoulder = calculate_angle(pose.keypoints[11], pose.keypoints[13], pose.keypoints[5]);
         let rHip_rKnee_rShoulder = calculate_angle(pose.keypoints[12], pose.keypoints[14], pose.keypoints[6]);
-        let a2 = inputs.push(lHip_lKnee_lShoulder);
-        let a3 = inputs.push(rHip_rKnee_rShoulder);
+        inputs.push(lHip_lKnee_lShoulder);
+        inputs.push(rHip_rKnee_rShoulder);
 
         let lShoulder_lHip_lElbow = calculate_angle(pose.keypoints[5], pose.keypoints[11], pose.keypoints[7]);
         let rShoulder_rHip_rElbow = calculate_angle(pose.keypoints[6], pose.keypoints[12], pose.keypoints[8]);
-        let a4 = inputs.push(lShoulder_lHip_lElbow);
-        let a5 = inputs.push(rShoulder_rHip_rElbow);
+        inputs.push(lShoulder_lHip_lElbow);
+        inputs.push(rShoulder_rHip_rElbow);
 
         let lElbow_lShoulder_lWrist = calculate_angle(pose.keypoints[7], pose.keypoints[5], pose.keypoints[9]);
         let rElbow_rShoulder_rWrist = calculate_angle(pose.keypoints[8], pose.keypoints[6], pose.keypoints[10]);
-        let a6 = inputs.push(lElbow_lShoulder_lWrist);
-        let a7 = inputs.push(rElbow_rShoulder_rWrist);
+        inputs.push(lElbow_lShoulder_lWrist);
+        inputs.push(rElbow_rShoulder_rWrist);
 
         let lShoulder_lAnkle_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[15], pose.keypoints[9]);
         let rShoulder_rAnkle_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[16], pose.keypoints[10]);
-        let a8 = inputs.push(lShoulder_lAnkle_lWrist);
-        let a9 = inputs.push(rShoulder_rAnkle_rWrist);
+        inputs.push(lShoulder_lAnkle_lWrist);
+        inputs.push(rShoulder_rAnkle_rWrist);
 
         let lShoulder_lKnee_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[13], pose.keypoints[9]);
         let rShoulder_rKnee_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[14], pose.keypoints[10]);
-        let a10 = inputs.push(lShoulder_lKnee_lWrist);
-        let a11 = inputs.push(rShoulder_rKnee_rWrist);
+        inputs.push(lShoulder_lKnee_lWrist);
+        inputs.push(rShoulder_rKnee_rWrist);
 
         let lShoulder_lHip_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[11], pose.keypoints[9]);
         let rShoulder_rHip_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[12], pose.keypoints[10]);
-        let a12 = inputs.push(lShoulder_lHip_lWrist);
-        let a13 = inputs.push(rShoulder_rHip_rWrist);
+        inputs.push(lShoulder_lHip_lWrist);
+        inputs.push(rShoulder_rHip_rWrist);
+
+        // console.log(inputs);
 
         brain.classify(inputs, gotResult);//Gets the points to classify
-        tempInput.push(a0);
-        tempInput.push(a1);
-        tempInput.push(a2);
-        tempInput.push(a3);
-        tempInput.push(a4);
-        tempInput.push(a5);
-        tempInput.push(a6);
-        tempInput.push(a7);
-        tempInput.push(a8);
-        tempInput.push(a9);
-        tempInput.push(a10);
-        tempInput.push(a11);
-        tempInput.push(a12);
-        tempInput.push(a13);
-        tempInputSum = tempInput.reduce(sumCalculator);
+        // tempInput.push(a0);
+        // tempInput.push(a1);
+        // tempInput.push(a2);
+        // tempInput.push(a3);
+        // tempInput.push(a4);
+        // tempInput.push(a5);
+        // tempInput.push(a6);
+        // tempInput.push(a7);
+        // tempInput.push(a8);
+        // tempInput.push(a9);
+        // tempInput.push(a10);
+        // tempInput.push(a11);
+        // tempInput.push(a12);
+        // tempInput.push(a13);
+        // tempInputSum = tempInput.reduce(sumCalculator);
     }
     else{
         // delay if it wasnt able to detect the initial pose
@@ -163,6 +167,7 @@ function gotResult(error, results){
         } else {
             poseResult = "Incorrect Pose";
         }
+        console.log(label);
         console.log(poseResult);
     }
     // after first classification, you want to keep classifying for new poses
@@ -274,7 +279,6 @@ function draw() {
             fill (100, 99, 82);
             ellipse(x, y, 16, 16);
         }
-
         for (let i = 0; i < skeleton.length; i++){
             let a = skeleton[i][0]; //skeleton is a 2D array, the second dimension holds the 2 locations that are connected on the keypoint
             let b = skeleton[i][1];
