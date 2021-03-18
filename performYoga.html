@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+  	<title>yoga-pose-estimator</title>
+    <link rel="stylesheet" href="assets/style.css">
+
+  	<script src="https://unpkg.com/ml5@0.6.0/dist/ml5.min.js" type="text/javascript"></script>
+  	<script src="libraries/p5.js"></script>
+  	<script src="libraries/p5.dom.js"></script>
+  	<script src="libraries/p5.sound.js"></script>
+
+</head>
+<body>
+  <h1>Instructions</h1>
+
+  <div class="buttons">
+    <div><p style="width: 290px; position:absolute; top: 400px; left:550px"">Perform the pose and hold for 30 seconds</p></div>
+    <div><p style="width: 290px; position:absolute; top: 400px; left: 1020px"">The timer will restart if you make a mistake.<br><br> Remember to breathe!</p></div>
+    <div><h3></h3></div>
+  </div>
+
+  <img src="imgs/time.svg" style="position:absolute; top: 340px; left: 1290px; height:100px"/>
+
+  <div class="buttons">
+  <div><a href="index.html" style="width: 150px"><indexbutton style="font-size: 40px; top:700px">Back</indexbutton></a></div>
+  <div></div>
+  <div><a href="practice.html" style="width: 150px"><indexbutton style="font-size: 40px; left:1100px; top:700px; background:#5749AE;">Start &#x279c;</indexbutton></a></div>
+  <div></div>
+  </div>
+
+  <!-- scripts -->
+  <script src="model/model_deploy.js"></script>
+
+</body>
+<footer>&copy; Copyright 2021. By Ryerson University.</footer>
+</html>
