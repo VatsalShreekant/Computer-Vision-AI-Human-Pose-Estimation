@@ -1,0 +1,64 @@
+canvas {
+  display: block;
+}
+
+html, body {
+  margin: 0px;
+  /*background-color: #ce3635;*/
+  text-align: center;
+  background-color: #FFFFFF;
+  font-family: Helvetica, sans-serif, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3.625rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+footer {
+  position: absolute;
+  padding-bottom: 10px;
+  bottom: 0;
+  width: 100%;
+}
+
+p {
+  text-align: left;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.yoga-title {
+  display: block;
+  width: 40%;
+  margin: auto;
+}
+
+.button {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 50px;
+  line-height: 65px;
+  text-align: left;
+  padding-left: 20px;
+  padding-right: 20px;
+  letter-spacing: -0.05em;
+  height: 75px;
+  left:99px;
+}
+
+.github-link {
+  display: inline-block;
+  padding-top: 100px;
+  width: 2.5%;
+}
+
+.button-container {
+  text-align: center;
+}
