@@ -1,15 +1,24 @@
 canvas {
   display: block;
+  text-align: center;
 }
 
-html, body {
-  margin: 0px;
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
   /*background-color: #ce3635;*/
   text-align: center;
   background-color: #FFFFFF;
   font-family: Helvetica, sans-serif, sans-serif;
   font-size: 14px;
   overflow: hidden;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -22,10 +31,9 @@ h4 {
 }
 
 footer {
-  position: absolute;
-  padding-bottom: 10px;
-  bottom: 0;
+  padding: 10px;
   width: 100%;
+  margin-top: auto;
 }
 
 p {
@@ -42,23 +50,65 @@ p {
 
 .button {
   display: inline-block;
-  font-weight: 500;
-  font-size: 50px;
+  font-size: 2rem;
   line-height: 65px;
   text-align: left;
-  padding-left: 20px;
-  padding-right: 20px;
-  letter-spacing: -0.05em;
-  height: 75px;
-  left:99px;
-}
-
-.github-link {
-  display: inline-block;
-  padding-top: 100px;
-  width: 2.5%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  /* letter-spacing: -0.05em; */
+  /* height: 75px; */
+  /* left:99px; */
 }
 
 .button-container {
+  /* text-align: center; */
+  align-self: flex-start;
+}
+
+.row-poses {
+  display: flex;
+  padding-top: 5%;
+}
+
+.column-poses {
+  flex: 25%;
+  padding: 10px;
+  background-size: cover;
+}
+
+.pose-description {
   text-align: center;
+  font-size: 1.5rem;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 1fr;
+  grid-gap: 10px;
+}
+
+.sketch-holder {
+  margin: auto;
+}
+
+.trainer {
+  margin: auto;
+}
+
+.feedback {
+  margin: auto;
+}
+
+.homepage-btn {
+  margin: auto;
+}
+
+.yoga-header {
+  margin: auto;
+}
+
+.start-yoga {
+  padding: 0;
+  border: none;
+  background: none;
 }

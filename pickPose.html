@@ -15,16 +15,37 @@
     </script>
 </head>
 <body>
-  <h1>Instructions</h1>
+  <div>
+    <h1>Instructions</h1>
+    <h2>Begin a yoga session by picking from one of the poses below.</h2>
+  </div>
 
-  <div class="poses">
-    
+  <div class="row-poses">
+    <div class="column-poses">
+      <a href="practice.html" class="mountain-img" id="Mountain"><img src="imgs/mountain.svg"></a>
+      <p class='pose-description'>Mountain Pose</p>
+    </div>
+    <div class="column-poses">
+      <a href="practice.html" class="tree-img" id="Tree"><img src="imgs/tree.png"></a>
+      <p class='pose-description'>Tree Pose</p>
+    </div>
+    <div class="column-poses">
+      <a href="practice.html" class="goddess-img" id="Goddess"><img src="imgs/goddess.png"></a>
+      <p class='pose-description'>Goddess Pose</p>
+    </div>
+    <div class="column-poses">
+      <a href="practice.html" class="warrior2-img" id="Warrior-2"><img src="imgs/warrior2.png"></a>
+      <p class='pose-description'>Warrior 2 Pose</p>  
+    </div>
   </div>
 
   <div class="buttons">
-    <div><a href="index.html" style="width: 150px"><indexbutton style="font-size: 40px; top:550px; background: rgba(254, 220, 0, 1);">Back</indexbutton></a></div>
-    <div><a href="practice.html" style="width: 150px"><indexbutton style="font-size: 40px; left:1100px; top:550px;  background: rgba(254, 220, 0, 1);">Start &#x279c;</indexbutton></a></div>
+    <div><a href="index.html" class="button">Back</a></div>
   </div>
+
+  <!-- scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="index.js" charset="utf-8"></script>
 
 </body>
 <footer>&copy; Copyright 2021. By Ryerson University.</footer>
