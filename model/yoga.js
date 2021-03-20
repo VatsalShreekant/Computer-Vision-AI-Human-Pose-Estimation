@@ -6,39 +6,35 @@ let skeleton;
 let numOutputs = 4;
 
 let brain;
-let treeAngleTarget = [265.9138,260.6718,272.7146,246.3994,60.34498,111.5485,51.3400,142.6155,116.9140,68.0511,116.1573,59.6353,115.0495,67.7750];
-let mountainAngleTarget = [267.9289,267.8780,277.3239,259.9554,67.79409,113.0501,271.2225,274.2705,71.86728,108.5598,71.2390,110.4801,68.2499,114.9507];
-let goddessAngleTarget = [225.8889,289.7705,307.4745,237.3843,76.1576,128.9146,153.4326,146.6774,225.0465,128.0132,174.4841,122.9264,227.6440,135.7814];
-let warrior2AngleTarget = [254.2574,297.9138,296.2177,242.5748,76.0482,130.3566,257.8660,232.2876,40.0474,134.5878,39.8124,132.0314,82.7860,140.9961];
 
-let sumCalculator = (accumulator, currentValue) => accumulator + currentValue;
-let treeAngleTargetSum = treeAngleTarget.reduce(sumCalculator);
-let mountainAngleTargetSum = mountainAngleTarget.reduce(sumCalculator);
-let goddessAngleTargetSum = goddessAngleTarget.reduce(sumCalculator);
-let warrior2AngleTargetSum = warrior2AngleTarget.reduce(sumCalculator);
-let tempInputSum;
+// may need to tweak with these values if we plan to use this method
+let mountainAngleTarget = [175,175,175,175,19,22,179,170,19,20,15,15,20,20];
+let treeAngleTarget = [175,58,175,114,30,30,45,45,23,23,25,45,25,20];
+let goddessAngleTarget = [110,110,110,110,100,100,100,100,120,120,110,110,140,140];
+let warrior2AngleTarget = [160,100,160,100,95,100,175,175,70,80,80,75,90,90];
 
-// let poses = ["Mountain", "Tree", "Goddess", "Warrior 2"];
+let targetArray;
 let label = "";
 let currentPose = "";
 let poseResult = "";
 let canvas;
+let flagged = [];
 
 function setup() {
   canvas = createCanvas(800, 600);
-  // centerCanvas();
   canvas.parent('sketch-holder');
   video = createCapture(VIDEO);
   video.hide();
   video.size(800,600);
   poseNet = ml5.poseNet(video, modelLoaded);
   poseNet.on('pose', gotPoses);
-  // frameRate(30);
 
   // get user pose
   getUserPose();
-
+  // set target array
+  setTargetArray();
   // load user trainer model
+  loadUserTrainer();
 
   let options = {
     inputs: 14,
@@ -56,16 +52,6 @@ function setup() {
   brain.load(modelInfo, brainLoaded);
 }
 
-// function centerCanvas() {
-//   let x = ((windowWidth - width) / 2) - 0.25*windowWidth;
-//   let y = ((windowHeight - height) / 2) + 0.1*windowHeight;
-//   canvas.position(x, y);
-// }
-
-// function windowResized() {
-//   centerCanvas();
-// }
-
 function getUserPose() {
   // get user selected pose
   currentPose = localStorage.getItem('SelectedPose');
@@ -76,8 +62,33 @@ function getUserPose() {
   $(".currentPose").text(currentPose + " Pose");
 }
 
-function loadUserTrainer() {
+function setTargetArray() {
+  if (currentPose === 'Mountain') {
+    targetArray = mountainAngleTarget;
+  } else if (currentPose === "Tree") {
+    targetArray = treeAngleTarget;
+  } else if (currentPose === 'Goddess') {
+    targetArray = goddessAngleTarget;
+  } else {
+    targetArray = warrior2AngleTarget;
+  }
+}
 
+function loadUserTrainer() {
+  // pick model based on user selection
+  let pose_name = currentPose.toLowerCase();
+  let img_path = "";
+  if (pose_name === "warrior 2") {
+    pose_name = 'warrior2';
+  }
+  if (pose_name === "goddess") {
+    img_format = ".png";
+  }
+  else {
+    img_format = ".svg";
+  }
+  img_path = "imgs/" + pose_name + img_format;
+  $(".trainer-img").attr("src", img_path);
 }
 
 function brainLoaded() {
@@ -97,19 +108,18 @@ function calculate_angle(P1,P2,P3) {
       P3.position.x - P1.position.x
     )
   ) * (180 / Math.PI);
-  if (angle > 90) {
-    angle = 450 - angle;
-  }else {
-    angle = 90 - angle;
+  // take the abs
+  angle = Math.abs(angle);
+  if (angle > 180) {
+      angle = 360 - angle;
   }
-  return angle;
+  return Math.round(angle*100) / 100;
 }
 
 function classifyPose(){
   // only classify if there is a pose detected from posenet
   if(pose){
     let inputs = [];
-    let tempInput = [];
     // angle is denoted by angle(P1,P2,P3) where P1 is the 'origin'
     let lKnee_lAnkle_lHip = calculate_angle(pose.keypoints[13], pose.keypoints[15], pose.keypoints[11]);
     let rKnee_rAnkle_rHip = calculate_angle(pose.keypoints[14], pose.keypoints[16], pose.keypoints[12]);
@@ -121,8 +131,8 @@ function classifyPose(){
     inputs.push(lHip_lKnee_lShoulder);
     inputs.push(rHip_rKnee_rShoulder);
 
-    let lShoulder_lHip_lElbow = calculate_angle(pose.keypoints[5], pose.keypoints[11], pose.keypoints[7]);
-    let rShoulder_rHip_rElbow = calculate_angle(pose.keypoints[6], pose.keypoints[12], pose.keypoints[8]);
+    let lShoulder_lHip_lElbow = calculate_angle(pose.keypoints[5], pose.keypoints[7], pose.keypoints[11]);
+    let rShoulder_rHip_rElbow = calculate_angle(pose.keypoints[6], pose.keypoints[8], pose.keypoints[12]);
     inputs.push(lShoulder_lHip_lElbow);
     inputs.push(rShoulder_rHip_rElbow);
 
@@ -141,29 +151,16 @@ function classifyPose(){
     inputs.push(lShoulder_lKnee_lWrist);
     inputs.push(rShoulder_rKnee_rWrist);
 
-    let lShoulder_lHip_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[11], pose.keypoints[9]);
-    let rShoulder_rHip_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[12], pose.keypoints[10]);
+    let lShoulder_lHip_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[9], pose.keypoints[11]);
+    let rShoulder_rHip_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[10], pose.keypoints[12]);
     inputs.push(lShoulder_lHip_lWrist);
     inputs.push(rShoulder_rHip_rWrist);
 
-    // console.log(inputs);
-
-    brain.classify(inputs, gotResult);//Gets the points to classify
-    // tempInput.push(a0);
-    // tempInput.push(a1);
-    // tempInput.push(a2);
-    // tempInput.push(a3);
-    // tempInput.push(a4);
-    // tempInput.push(a5);
-    // tempInput.push(a6);
-    // tempInput.push(a7);
-    // tempInput.push(a8);
-    // tempInput.push(a9);
-    // tempInput.push(a10);
-    // tempInput.push(a11);
-    // tempInput.push(a12);
-    // tempInput.push(a13);
-    // tempInputSum = tempInput.reduce(sumCalculator);
+    //Gets the points to classify
+    brain.classify(inputs, gotResult);
+    
+    // get the error for each angles collected
+    calculateError(inputs);
   }
   else{
     // delay if it wasnt able to detect the initial pose
@@ -171,101 +168,128 @@ function classifyPose(){
   }
 }
 
+function calculateError(anglesArr) {
+  let errorsArr = [];
+  let score = 0;
+  let finalScore = 0;
+  // first determine if model is detecting correct pose first
+  if (poseResult === currentPose) {
+    // calculate the difference in error for each angle against the average
+    for (var i=0;i<anglesArr.length;i++) {
+      // check against error of margin per angle
+      let err = anglesArr[i] - targetArray[i];
+      let diff = Math.abs(err);
+      if (diff >= 0 && diff < 10.0) {
+        // this is a good result
+        //console.log("very good");
+        score+=1;
+      } else if (diff >= 10 && diff < 20){
+        // terrible attempt
+        //console.log("alright");
+        score+=0.5;
+      } 
+      // other cases, just don't increment score at all
+      // errorsArr contains the abs difference, might be useful later
+      errorsArr.push(err);
+    }
+  } 
+
+  // set flagged points based on error
+  setFlaggedPoints(errorsArr);
+
+  // generate feedback for user
+  // giveFeedback(errorsArr);
+
+  // display score to user (overall accuracy estimate)
+  finalScore = (score / anglesArr.length) * 100;
+  finalScore = Math.round(finalScore * 10) / 10;
+  $('.accuracy').text(finalScore + " %");
+}
+
+function setFlaggedPoints(errArray) {
+  // clear the flagged array before starting
+  flagged.splice(0, flagged.length);
+
+  let arr = [];
+
+  for (var i=0;i<errArray.length;i++) {
+    if (errArray[i] > 10){
+      // these are angles that aren't correct
+      // need to improve current method
+      switch(i) {
+        case 0:
+          arr = [13,15,11];
+          break;
+        case 1:
+          arr = [14,16,12];
+          break;
+        case 2:
+          arr = [11,13,5];
+          break;
+        case 3:
+          arr = [12,14,6];
+          break;
+        case 4:
+          arr = [5,7,11];
+          break;
+        case 5:
+          arr = [6,8,12];
+          break;
+        case 6:
+          arr = [7,5,9];
+          break;
+        case 7:
+          arr = [8,6,10];
+          break;
+        case 8:
+          arr = [5,15,9];
+          break;
+        case 9:
+          arr = [6,16,10];
+          break;
+        case 10:
+          arr = [5,13,9];
+          break;
+        case 11:
+          arr = [6,14,10];
+          break;
+        case 12:
+          arr = [5,11,9];
+          break;
+        case 13:
+          arr = [6,12,10];
+          break;
+        default:
+          console.log("Should not come here");
+      }
+      flagged.push(arr);
+    }
+  }
+}
+
+function giveFeedback(errorsArr){
+  // if the error is positive.. then user has to add to reach the angle
+  // else, then they overshot, and need to drop angle
+
+  // refer to this
+  // [lKnee_lAnkle_lHip, rKnee_rAnkle_rHip, lHip_lKnee_lShoulder, rHip_rKnee_rShoulder, lShoulder_lHip_lElbow, rShoulder_rHip_rElbow, 
+  // lElbow_lShoulder_lWrist, rElbow_rShoulder_rWrist, lShoulder_lAnkle_lWrist, rShoulder_rAnkle_rWrist, lShoulder_lKnee_lWrist, 
+  // rShoulder_rKnee_rWrist, lShoulder_lHip_lWrist, rShoulder_rHip_rWrist]
+
+}
+
 function gotResult(error, results){
   // will compare based on the pose that the user selects, and the pose that the machine learning model returns
   if(results[0].confidence > 0.75){
     label = results[0].label;
     if (label === currentPose){
-        poseResult = "Correct Pose";
+        poseResult = currentPose;
     } else {
-        poseResult = "Incorrect Pose";
+        poseResult = "";
     }
-    console.log(label);
-    console.log(poseResult);
   }
   // after first classification, you want to keep classifying for new poses
   classifyPose();
-}
-
-function verifyTreePose(calculatedAngle){
-  for(i = 0; i<treeAngleTarget.length(); i++){
-    if (calculatedAngle[i] < treeAngleTarget[i] + 10.0 && calculatedAngle[i] > treeAngleTarget[i] - 10.0){
-    //For Vatsal + Dimple of specific angles relating to pose
-    }
-    else {
-      text('Fix your angle');
-    }
-  }
-    /*Overall Percent accuracy for Tree Pose*/
-  if(treeAngleTargetSum>=tempInputSum){
-    let treeAngleAccuracy1 = ((treeAngleTargetSum - tempInputSum)/treeAngleTargetSum)*100;
-    text('Correct angle', treeAngleAccuracy1);
-  }
-  else if(treeAngleTargetSum<tempInputSum) {
-    let treeAngleAccuracy2 = ((tempInputSum-treeAngleTargetSum)/treeAngleTargetSum)*100;
-    text('Correct angle', treeAngleAccuracy2);
-  }
-}
-
-function verifyMountainPose(calculatedAngle){
-  for(i = 0; i<mountainAngleTarget.length(); i++){
-    if (calculatedAngle[i] < mountainAngleTarget[i] + 10.0 && calculatedAngle[i] > mountainAngleTarget[i] - 10.0){
-    //For Vatsal + Dimple of specific angles relating to pose
-    }
-    else {
-      text('Fix your angle');
-    }
-  }
-    /*Overall Percent accuracy for Mountain Pose*/
-  if(mountainAngleTargetSum>=tempInputSum){
-    let mountainAngleAccuracy1 = ((mountainAngleTargetSum - tempInputSum)/mountainAngleTargetSum)*100;
-    text('Correct angle', mountainAngleAccuracy1);
-  }
-  else if(mountainAngleTargetSum<tempInputSum) {
-    let mountainAngleAccuracy2 = ((tempInputSum-mountainAngleTargetSum)/mountainAngleTargetSum)*100;
-    text('Correct angle', mountainAngleAccuracy2);
-  }
-}
-
-function verifyGoddessPose(calculatedAngle){
-  for(i = 0; i<goddessAngleTarget.length(); i++){
-    if (calculatedAngle[i] < goddessAngleTarget[i] + 10.0 && calculatedAngle[i] > goddessAngleTarget[i] - 10.0){
-    //For Vatsal + Dimple of specific angles relating to pose
-    }
-    else {
-      text('Fix your angle');
-    }
-  }
-/*Overall Percent accuracy for Tree Pose*/
-  if(goddessAngleTargetSum>=tempInputSum){
-    let goddessAngleAccuracy1 = ((goddessAngleTargetSum - tempInputSum)/goddessAngleTargetSum)*100;
-    text('Correct angle', goddessAngleAccuracy1);
-  }
-  else if(goddessAngleTargetSum<tempInputSum) {
-    let goddessAngleAccuracy2 = ((tempInputSum-goddessAngleTargetSum)/goddessAngleTargetSum)*100;
-    text('Correct angle', goddessAngleAccuracy2);
-  }
-}
-
-function verifyWarrior2Pose(calculatedAngle){
-  for(i = 0; i<warrior2AngleTarget.length(); i++){
-    if (calculatedAngle[i] < warrior2AngleTarget[i] + 10.0 && calculatedAngle[i] > warrior2AngleTarget[i] - 10.0){
-    //For Vatsal + Dimple of specific angles relating to pose
-    }
-    else {
-      text('Fix your angle');
-    }
-  }
-
-/*Overall Percent accuracy for Tree Pose*/
-  if(warrior2AngleTargetSum>=tempInputSum){
-    let warrior2AngleAccuracy1 = ((warrior2AngleTargetSum - tempInputSum)/warrior2AngleTargetSum)*100;
-    text('Correct angle', warrior2AngleAccuracy1);
-  }
-  else if(warrior2AngleTargetSum<tempInputSum) {
-    let warrior2AngleAccuracy2 = ((tempInputSum-warrior2AngleTargetSum)/warrior2AngleTargetSum)*100;
-    text('Correct angle', warrior2AngleAccuracy2);
-  }
 }
 
 function gotPoses(poses) {
@@ -280,30 +304,55 @@ function modelLoaded () {
     console.log('poseNet ready');
 }
 
+function drawPose() {
+  for (let i = 5; i < pose.keypoints.length; i++){
+    let x = pose.keypoints[i].position.x;
+    let y = pose.keypoints[i].position.y;
+    fill (255);
+    ellipse(x, y, 16, 16);
+  }
+  // console.log("skeleton length: " + skeleton.length);
+  //sketch original results without any indicators
+  for (let i = 0; i < skeleton.length; i++){
+    let a = skeleton[i][0]; //skeleton is a 2D array, the second dimension holds the 2 locations that are connected on the keypoint
+    let b = skeleton[i][1];
+    stroke(255);
+    strokeWeight(10);
+    line(a.position.x, a.position.y, b.position.x, b.position.y);
+  }
+  // overwrite the lines that are flagged as error
+  for (let i=0;i<flagged.length;i++) {
+    let idx1 = flagged[i][0];
+    let idx2 = flagged[i][1];
+    let idx3 = flagged[i][2];
+
+    let x1 = pose.keypoints[idx1].position.x;
+    let y1 = pose.keypoints[idx1].position.y;
+
+    let x2 = pose.keypoints[idx2].position.x;
+    let y2 = pose.keypoints[idx2].position.y;
+
+    let x3 = pose.keypoints[idx3].position.x;
+    let y3 = pose.keypoints[idx3].position.y;
+
+    strokeWeight(10);
+    stroke(255,0,0);
+    line(x1,y1,x2,y2);
+    line(x1,y1,x3,y3);
+  }
+}
+
 function draw() {
   push();
   translate(video.width,0);
   scale(-1,1);
   image(video, 0, 0, video.width, video.height);
   if (pose) {
-    for (let i = 5; i < pose.keypoints.length; i++){
-      let x = pose.keypoints[i].position.x;
-      let y = pose.keypoints[i].position.y;
-      fill (100, 99, 82);
-      ellipse(x, y, 16, 16);
-    }
-    for (let i = 0; i < skeleton.length; i++){
-      let a = skeleton[i][0]; //skeleton is a 2D array, the second dimension holds the 2 locations that are connected on the keypoint
-      let b = skeleton[i][1];
-      strokeWeight(5);
-      stroke(255);
-      line(a.position.x, a.position.y, b.position.x, b.position.y);
-    }
+    drawPose();
   }
   pop();
   fill(255);
   textSize(64);
   textAlign(CENTER,TOP);
   text(poseResult, 0, 12, width);
-  // text("FRate "+ int(getFrameRate()),350,200);
 }
