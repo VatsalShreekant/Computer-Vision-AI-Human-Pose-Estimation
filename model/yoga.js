@@ -49,17 +49,8 @@ function setup() {
     metadata: 'model/model_meta.json',
     weights: 'model/model.weights.bin',
   };
+  
   brain.load(modelInfo, brainLoaded);
-}
-
-function getUserPose() {
-  // get user selected pose
-  currentPose = localStorage.getItem('SelectedPose');
-  if(currentPose === "Warrior-2") {
-    currentPose = currentPose.split("-")[0];
-    currentPose = currentPose + " 2";
-  }
-  $(".currentPose").text(currentPose + " Pose");
 }
 
 function setTargetArray() {
@@ -95,6 +86,16 @@ function brainLoaded() {
   console.log('pose classification model ready');
   // if model is ready, then you can begin classification
   classifyPose();
+}
+
+function getUserPose() {
+  // get user selected pose
+  currentPose = localStorage.getItem('SelectedPose');
+  if(currentPose === "Warrior-2") {
+    currentPose = currentPose.split("-")[0];
+    currentPose = currentPose + " 2";
+  }
+  $(".currentPose").text(currentPose + " Pose");
 }
 
 function calculate_angle(P1,P2,P3) {
@@ -198,7 +199,7 @@ function calculateError(anglesArr) {
   setFlaggedPoints(errorsArr);
 
   // generate feedback for user
-  // giveFeedback(errorsArr);
+  giveFeedback(anglesArr);
 
   // display score to user (overall accuracy estimate)
   finalScore = (score / anglesArr.length) * 100;
@@ -267,14 +268,16 @@ function setFlaggedPoints(errArray) {
   }
 }
 
-function giveFeedback(errorsArr){
-  // if the error is positive.. then user has to add to reach the angle
-  // else, then they overshot, and need to drop angle
-
+function giveFeedback(anglesArr){
   // refer to this
   // [lKnee_lAnkle_lHip, rKnee_rAnkle_rHip, lHip_lKnee_lShoulder, rHip_rKnee_rShoulder, lShoulder_lHip_lElbow, rShoulder_rHip_rElbow, 
   // lElbow_lShoulder_lWrist, rElbow_rShoulder_rWrist, lShoulder_lAnkle_lWrist, rShoulder_rAnkle_rWrist, lShoulder_lKnee_lWrist, 
   // rShoulder_rKnee_rWrist, lShoulder_lHip_lWrist, rShoulder_rHip_rWrist]
+  console.log(anglesArr.length);
+  for(var i=0; i<anglesArr.length; i+=2) {
+    $('#left-'+ i.toString()).text("∠ " + anglesArr[i]);
+    $('#right-'+ (i+1).toString()).text("∠ " + anglesArr[i+1]);
+  }
 
 }
 

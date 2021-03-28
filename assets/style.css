@@ -41,6 +41,23 @@ p {
   padding-right: 1rem;
 }
 
+p.feedback-description {
+  text-align: center;
+  font-size: large;
+}
+
+table {
+  margin: auto;
+}
+
+th {
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+}
+
 .yoga-title {
   display: block;
   width: 30%;
