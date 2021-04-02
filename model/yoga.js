@@ -124,23 +124,23 @@ function classifyPose(){
     // angle is denoted by angle(P1,P2,P3) where P1 is the 'origin'
     let lKnee_lAnkle_lHip = calculate_angle(pose.keypoints[13], pose.keypoints[15], pose.keypoints[11]);
     let rKnee_rAnkle_rHip = calculate_angle(pose.keypoints[14], pose.keypoints[16], pose.keypoints[12]);
-    inputs.push(lKnee_lAnkle_lHip);
-    inputs.push(rKnee_rAnkle_rHip);
+    inputs.push(lKnee_lAnkle_lHip); // detector
+    inputs.push(rKnee_rAnkle_rHip); // detector
 
     let lHip_lKnee_lShoulder = calculate_angle(pose.keypoints[11], pose.keypoints[13], pose.keypoints[5]);
     let rHip_rKnee_rShoulder = calculate_angle(pose.keypoints[12], pose.keypoints[14], pose.keypoints[6]);
-    inputs.push(lHip_lKnee_lShoulder);
-    inputs.push(rHip_rKnee_rShoulder);
+    inputs.push(lHip_lKnee_lShoulder); // detector
+    inputs.push(rHip_rKnee_rShoulder); // detector
 
     let lShoulder_lHip_lElbow = calculate_angle(pose.keypoints[5], pose.keypoints[7], pose.keypoints[11]);
     let rShoulder_rHip_rElbow = calculate_angle(pose.keypoints[6], pose.keypoints[8], pose.keypoints[12]);
-    inputs.push(lShoulder_lHip_lElbow);
-    inputs.push(rShoulder_rHip_rElbow);
+    inputs.push(lShoulder_lHip_lElbow); // detector
+    inputs.push(rShoulder_rHip_rElbow); // detector
 
     let lElbow_lShoulder_lWrist = calculate_angle(pose.keypoints[7], pose.keypoints[5], pose.keypoints[9]);
     let rElbow_rShoulder_rWrist = calculate_angle(pose.keypoints[8], pose.keypoints[6], pose.keypoints[10]);
-    inputs.push(lElbow_lShoulder_lWrist);
-    inputs.push(rElbow_rShoulder_rWrist);
+    inputs.push(lElbow_lShoulder_lWrist); // detector
+    inputs.push(rElbow_rShoulder_rWrist); // detector
 
     let lShoulder_lAnkle_lWrist = calculate_angle(pose.keypoints[5], pose.keypoints[15], pose.keypoints[9]);
     let rShoulder_rAnkle_rWrist = calculate_angle(pose.keypoints[6], pose.keypoints[16], pose.keypoints[10]);
@@ -198,7 +198,6 @@ function calculateError(anglesArr) {
   // set flagged points based on error
   setFlaggedPoints(errorsArr);
 
-  // generate feedback for user
   giveFeedback(anglesArr);
 
   // display score to user (overall accuracy estimate)
@@ -219,46 +218,46 @@ function setFlaggedPoints(errArray) {
       // need to improve current method
       switch(i) {
         case 0:
-          arr = [13,15,11];
+          arr = [13,15,11,1];
           break;
         case 1:
-          arr = [14,16,12];
+          arr = [14,16,12,1];
           break;
         case 2:
-          arr = [11,13,5];
+          arr = [11,13,5,1];
           break;
         case 3:
-          arr = [12,14,6];
+          arr = [12,14,6,1];
           break;
         case 4:
-          arr = [5,7,11];
+          arr = [5,7,11,1];
           break;
         case 5:
-          arr = [6,8,12];
+          arr = [6,8,12,1];
           break;
         case 6:
-          arr = [7,5,9];
+          arr = [7,5,9,1];
           break;
         case 7:
-          arr = [8,6,10];
+          arr = [8,6,10,1];
           break;
         case 8:
-          arr = [5,15,9];
+          arr = [5,15,9,0];
           break;
         case 9:
-          arr = [6,16,10];
+          arr = [6,16,10,0];
           break;
         case 10:
-          arr = [5,13,9];
+          arr = [5,13,9,0];
           break;
         case 11:
-          arr = [6,14,10];
+          arr = [6,14,10,0];
           break;
         case 12:
-          arr = [5,11,9];
+          arr = [5,11,9,0];
           break;
         case 13:
-          arr = [6,12,10];
+          arr = [6,12,10,0];
           break;
         default:
           console.log("Should not come here");
@@ -325,23 +324,25 @@ function drawPose() {
   }
   // overwrite the lines that are flagged as error
   for (let i=0;i<flagged.length;i++) {
-    let idx1 = flagged[i][0];
-    let idx2 = flagged[i][1];
-    let idx3 = flagged[i][2];
-
-    let x1 = pose.keypoints[idx1].position.x;
-    let y1 = pose.keypoints[idx1].position.y;
-
-    let x2 = pose.keypoints[idx2].position.x;
-    let y2 = pose.keypoints[idx2].position.y;
-
-    let x3 = pose.keypoints[idx3].position.x;
-    let y3 = pose.keypoints[idx3].position.y;
-
-    strokeWeight(10);
-    stroke(255,0,0);
-    line(x1,y1,x2,y2);
-    line(x1,y1,x3,y3);
+    if (flagged[i][3] === 1) {
+      let idx1 = flagged[i][0];
+      let idx2 = flagged[i][1];
+      let idx3 = flagged[i][2];
+  
+      let x1 = pose.keypoints[idx1].position.x;
+      let y1 = pose.keypoints[idx1].position.y;
+  
+      let x2 = pose.keypoints[idx2].position.x;
+      let y2 = pose.keypoints[idx2].position.y;
+  
+      let x3 = pose.keypoints[idx3].position.x;
+      let y3 = pose.keypoints[idx3].position.y;
+  
+      strokeWeight(10);
+      stroke(255,0,0);
+      line(x1,y1,x2,y2);
+      line(x1,y1,x3,y3);
+    }
   }
 }
 
