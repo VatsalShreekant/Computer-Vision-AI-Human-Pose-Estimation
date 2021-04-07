@@ -19,6 +19,9 @@ let currentPose = "";
 let poseResult = "";
 let canvas;
 let flagged = [];
+let timer = 5;
+let sessionTimer = false;
+let finishedStatus = "Finished";
 
 function setup() {
   canvas = createCanvas(800, 600);
@@ -36,6 +39,11 @@ function setup() {
   // load user trainer model
   loadUserTrainer();
 
+  // if button clicked
+  $("#start-btn").on('click', function(){
+    setInterval(decrease, 1000);
+  });
+
   let options = {
     inputs: 14,
     outputs: numOutputs,
@@ -51,6 +59,26 @@ function setup() {
   };
   
   brain.load(modelInfo, brainLoaded);
+}
+
+function decrease() {
+  if(sessionTimer === false) {
+    if(timer > 0) {
+      timer--;
+      $("#time-remaining").text("Starting in: " + timer + "s");
+    } else {
+      sessionTimer = true;
+      timer = 15;
+      $("#time-remaining").text("Time left: " + timer + "s");
+    }
+  } else {
+    if(timer > 0) {
+      timer--;
+      $("#time-remaining").text("Time left: " + timer + "s");
+    } else {
+      $("#time-remaining").text(finishedStatus);
+    }
+  }
 }
 
 function setTargetArray() {
@@ -170,40 +198,44 @@ function classifyPose(){
 }
 
 function calculateError(anglesArr) {
-  let errorsArr = [];
-  let score = 0;
-  let finalScore = 0;
-  // first determine if model is detecting correct pose first
-  if (poseResult === currentPose) {
-    // calculate the difference in error for each angle against the average
-    for (var i=0;i<anglesArr.length;i++) {
-      // check against error of margin per angle
-      let err = anglesArr[i] - targetArray[i];
-      let diff = Math.abs(err);
-      if (diff >= 0 && diff < 10.0) {
-        // this is a good result
-        //console.log("very good");
-        score+=1;
-      } else if (diff >= 10 && diff < 20){
-        // terrible attempt
-        //console.log("alright");
-        score+=0.5;
+  let status = $("#time-remaining").text();
+    if(sessionTimer == true && status !== finishedStatus) {
+      let errorsArr = [];
+      let score = 0;
+      let finalScore = 0;
+      // first determine if model is detecting correct pose first
+      if (poseResult === currentPose) {
+        // calculate the difference in error for each angle against the average
+        for (var i=0;i<anglesArr.length;i++) {
+          // check against error of margin per angle
+          let err = anglesArr[i] - targetArray[i];
+          let diff = Math.abs(err);
+          if (diff >= 0 && diff < 10.0) {
+            // this is a good result
+            //console.log("very good");
+            score+=1;
+          } else if (diff >= 10 && diff < 20){
+            // terrible attempt
+            //console.log("alright");
+            score+=0.5;
+          } 
+          // other cases, just don't increment score at all
+          // errorsArr contains the abs difference, might be useful later
+          errorsArr.push(err);
+        }
       } 
-      // other cases, just don't increment score at all
-      // errorsArr contains the abs difference, might be useful later
-      errorsArr.push(err);
+    
+      // set flagged points based on error
+      setFlaggedPoints(errorsArr);
+    
+      giveFeedback(anglesArr);
+    
+      // display score to user (overall accuracy estimate)
+      finalScore = (score / anglesArr.length) * 100;
+      finalScore = Math.round(finalScore * 10) / 10;
+      $('.accuracy').text(finalScore + " %");
     }
-  } 
-
-  // set flagged points based on error
-  setFlaggedPoints(errorsArr);
-
-  giveFeedback(anglesArr);
-
-  // display score to user (overall accuracy estimate)
-  finalScore = (score / anglesArr.length) * 100;
-  finalScore = Math.round(finalScore * 10) / 10;
-  $('.accuracy').text(finalScore + " %");
+    
 }
 
 function setFlaggedPoints(errArray) {
@@ -352,7 +384,10 @@ function draw() {
   scale(-1,1);
   image(video, 0, 0, video.width, video.height);
   if (pose) {
-    drawPose();
+    let status = $("#time-remaining").text();
+    if(sessionTimer == true && status !== finishedStatus) {
+      drawPose();      
+    }
   }
   pop();
   fill(255);
