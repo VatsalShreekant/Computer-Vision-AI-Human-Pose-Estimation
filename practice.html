@@ -12,6 +12,9 @@
     <script src="libraries/p5.dom.js"></script>
     <script src="libraries/p5.sound.js"></script>
   </head>
+
+
+
   <body>
     <div class="yoga-header">
       <h1>Yoga Session</h1>
@@ -39,7 +42,11 @@
       <div class="feedback" id='feedback'>
         <h2 class="feedback-header">Feedback for user:</h2>
         <h3 class="score">User Pose Accuracy:</h3>
-        <p class="accuracy">0 %</p>
+        <p class="accuracy" id="accuracy">0 %</p> <br>
+        <h3 class="score">User Pose Average Accuracy:</h3>
+
+        <p class="percent_accuracy" id="percent_accuracy"></p>
+
         <p class="feedback-description">Individual Calculated Angles</p>
         <table>
           <tr>
@@ -90,7 +97,11 @@
       <a href="#" class="button" id="start-btn">Start</a>
       <!-- <a href="index.html" class="button">Homepage</a> -->
       <a href="pickPose.html" class="button">Back</a>
+      <a href="reports.html" class="button">Reports</a>
+
     </div>
+
+
   </body>
 
   <footer>&copy; Copyright 2021. By Ryerson University.</footer>

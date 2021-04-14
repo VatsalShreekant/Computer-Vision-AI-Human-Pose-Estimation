@@ -22,6 +22,8 @@ let flagged = [];
 let timer = 5;
 let sessionTimer = false;
 let finishedStatus = "Finished";
+let saveAccuracy;
+let saveAccuracyArr = [];
 
 function setup() {
   canvas = createCanvas(800, 600);
@@ -57,7 +59,7 @@ function setup() {
     metadata: 'model/model_meta.json',
     weights: 'model/model.weights.bin',
   };
-  
+
   brain.load(modelInfo, brainLoaded);
 }
 
@@ -187,7 +189,7 @@ function classifyPose(){
 
     //Gets the points to classify
     brain.classify(inputs, gotResult);
-    
+
     // get the error for each angles collected
     calculateError(inputs);
   }
@@ -218,25 +220,42 @@ function calculateError(anglesArr) {
             // terrible attempt
             //console.log("alright");
             score+=0.5;
-          } 
+          }
           // other cases, just don't increment score at all
           // errorsArr contains the abs difference, might be useful later
           errorsArr.push(err);
         }
-      } 
-    
+      }
+
       // set flagged points based on error
       setFlaggedPoints(errorsArr);
-    
+
       giveFeedback(anglesArr);
-    
+
       // display score to user (overall accuracy estimate)
       finalScore = (score / anglesArr.length) * 100;
       finalScore = Math.round(finalScore * 10) / 10;
       $('.accuracy').text(finalScore + " %");
+      saveAccuracy = $('.accuracy').text();
+      saveAccuracy = saveAccuracy.slice(0, -2);
+      saveAccuracy = parseInt(saveAccuracy, 10);
+      
+      saveAccuracyArr.push(saveAccuracy);
+      //console.log(saveAccuracy);
     }
-    
+    let saveAccuracyNum = (saveAccuracyArr.reduce( (a, b)=> (a+b) )/saveAccuracyArr.length);
+     // console.log(saveAccuracyNum);
+     saveAccuracyNum = Math.round(saveAccuracyNum * 10) / 10;
+
+     $('.percent_accuracy').text(saveAccuracyNum + " %");
+
+
+    //if (status === finishedStatus ){
+    //  saveAccuracy = finalScore;
+  //  }
 }
+
+
 
 function setFlaggedPoints(errArray) {
   // clear the flagged array before starting
@@ -301,8 +320,8 @@ function setFlaggedPoints(errArray) {
 
 function giveFeedback(anglesArr){
   // refer to this
-  // [lKnee_lAnkle_lHip, rKnee_rAnkle_rHip, lHip_lKnee_lShoulder, rHip_rKnee_rShoulder, lShoulder_lHip_lElbow, rShoulder_rHip_rElbow, 
-  // lElbow_lShoulder_lWrist, rElbow_rShoulder_rWrist, lShoulder_lAnkle_lWrist, rShoulder_rAnkle_rWrist, lShoulder_lKnee_lWrist, 
+  // [lKnee_lAnkle_lHip, rKnee_rAnkle_rHip, lHip_lKnee_lShoulder, rHip_rKnee_rShoulder, lShoulder_lHip_lElbow, rShoulder_rHip_rElbow,
+  // lElbow_lShoulder_lWrist, rElbow_rShoulder_rWrist, lShoulder_lAnkle_lWrist, rShoulder_rAnkle_rWrist, lShoulder_lKnee_lWrist,
   // rShoulder_rKnee_rWrist, lShoulder_lHip_lWrist, rShoulder_rHip_rWrist]
   console.log(anglesArr.length);
   for(var i=0; i<anglesArr.length; i+=2) {
@@ -360,16 +379,16 @@ function drawPose() {
       let idx1 = flagged[i][0];
       let idx2 = flagged[i][1];
       let idx3 = flagged[i][2];
-  
+
       let x1 = pose.keypoints[idx1].position.x;
       let y1 = pose.keypoints[idx1].position.y;
-  
+
       let x2 = pose.keypoints[idx2].position.x;
       let y2 = pose.keypoints[idx2].position.y;
-  
+
       let x3 = pose.keypoints[idx3].position.x;
       let y3 = pose.keypoints[idx3].position.y;
-  
+
       strokeWeight(10);
       stroke(255,0,0);
       line(x1,y1,x2,y2);
@@ -386,7 +405,7 @@ function draw() {
   if (pose) {
     let status = $("#time-remaining").text();
     if(sessionTimer == true && status !== finishedStatus) {
-      drawPose();      
+      drawPose();
     }
   }
   pop();

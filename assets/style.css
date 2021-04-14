@@ -134,3 +134,15 @@ td {
   text-align: center;
   font-size: 5rem;
 }
+
+.percent_accuracy {
+  margin: auto;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.saveAccuracy{
+  margin: auto;
+  text-align: center;
+  font-size: 5rem;
+}
