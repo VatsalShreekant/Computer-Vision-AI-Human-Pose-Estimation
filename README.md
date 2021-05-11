@@ -44,11 +44,11 @@ Upon evaluation of the model, the model is able to classify the poses with an ac
 
 The performance of the model drops when the detection of keypoints fails. The scenarios include dark background or environment, as well as multiple users being in the frame of recording. The pose estimation uses a single-pose estimation model to perform data points collection, before being fed to the model classifier.
 
+Attempt of performing ‘Tree’ pose with some computed angles falling below a threshold of 10° and 20° error:
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117879304-cd955b00-b274-11eb-8648-b99d2364f4d3.PNG">
 </kbd>
-Attempt of performing ‘Tree’ pose with some computed angles falling below a threshold of 10° and 20° error.
 </p>
 
 <p align="center">
