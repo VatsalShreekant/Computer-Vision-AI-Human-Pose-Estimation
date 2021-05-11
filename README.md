@@ -23,22 +23,24 @@ Building a human pose detection system with the PoseNet model entailed dividing 
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG">
-  
-![Capture](https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG)
 </kbd>
 </p>
 <ins>Model Testing</ins>: The model was trained by determining a better way to collect the angles based on specified points as well as a scoring system. For the scoring system, two comparisons were run. Firstly, the model compared the user’s chosen pose with the pose being performed on camera. The second comparison was dependant upon the first. The model then compared each incoming angle against some target angle determined as the average of all individual angles computed for each pose.
 
 ## Performance Results:
 The performance of the model is quite promising. For poses such as ‘Mountain’ and ‘Warrior 2’, the results, when performed correctly, classifies the current pose. 
+<p align="center">
 <kbd>
-![Capture](https://user-images.githubusercontent.com/32462270/117877564-b6ee0480-b272-11eb-93fd-8fb7f19078b1.PNG)
+<img src="https://user-images.githubusercontent.com/32462270/117877564-b6ee0480-b272-11eb-93fd-8fb7f19078b1.PNG">
 </kbd>
+</p>
 
 Upon evaluation of the model, the model is able to classify the poses with an accuracy of 82.9%. Incorrect poses can be detected immediately, and outputs real-time feedback to the user with error indicators.
+<p align="center">
 <kbd>
-![Capture](https://user-images.githubusercontent.com/32462270/117877733-e7ce3980-b272-11eb-98da-895b47221104.PNG)
+<img src="https://user-images.githubusercontent.com/32462270/117877733-e7ce3980-b272-11eb-98da-895b47221104.PNG">
 </kbd>
+</p>
 
 The performance of the model drops when the detection of keypoints fails. The scenarios include dark background or environment, as well as multiple users being in the frame of recording. The pose estimation uses a single-pose estimation model to perform data points collection, before being fed to the model classifier.
 
