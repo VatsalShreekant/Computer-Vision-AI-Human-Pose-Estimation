@@ -44,6 +44,41 @@ Upon evaluation of the model, the model is able to classify the poses with an ac
 
 The performance of the model drops when the detection of keypoints fails. The scenarios include dark background or environment, as well as multiple users being in the frame of recording. The pose estimation uses a single-pose estimation model to perform data points collection, before being fed to the model classifier.
 
-  
+<p align="center">
+<kbd>
+<img src="https://user-images.githubusercontent.com/32462270/117879304-cd955b00-b274-11eb-8648-b99d2364f4d3.PNG">
+</kbd>
+</p>
+Attempt of performing ‘Tree’ pose with some computed angles falling below a threshold of 10° and 20° error.
+
+<p align="center">
+<kbd>
+<img src="https://user-images.githubusercontent.com/32462270/117879399-ef8edd80-b274-11eb-9302-92032ace12a7.PNG">
+</kbd>
+</p>
+Attempt of performing ‘Goddess’ pose with some computed angles falling below margin of 20° error.
+
+<p align="center">
+<kbd>
+<img src="https://user-images.githubusercontent.com/32462270/117879448-02091700-b275-11eb-9225-76db4fe4fe99.PNG">
+</kbd>
+</p>
+Attempt of performing ‘Goddess’ pose with some computed angles falling below a threshold of 10° and 20° error.
+
+<p align="center">
+<kbd>
+<img src="https://user-images.githubusercontent.com/32462270/117879514-15b47d80-b275-11eb-8f1c-aaa991801432.PNG">
+</kbd>
+</p>
+Attempt of performing ‘Warrior 2’ pose with some computed angles falling below a threshold of 10° and 20° error.
+
+![Capture](https://user-images.githubusercontent.com/32462270/117879304-cd955b00-b274-11eb-8648-b99d2364f4d3.PNG)
+Attempt of performing ‘Tree’ pose with some computed angles falling below a threshold of 10° and 20° error.
+![Capture](https://user-images.githubusercontent.com/32462270/117879399-ef8edd80-b274-11eb-9302-92032ace12a7.PNG)
+Attempt of performing ‘Goddess’ pose with some computed angles falling below margin of 20° error.
+![Capture](https://user-images.githubusercontent.com/32462270/117879448-02091700-b275-11eb-9225-76db4fe4fe99.PNG)
+Attempt of performing ‘Goddess’ pose with some computed angles falling below a threshold of 10° and 20° error.
+![Capture](https://user-images.githubusercontent.com/32462270/117879514-15b47d80-b275-11eb-8f1c-aaa991801432.PNG)
+Attempt of performing ‘Warrior 2’ pose with some computed angles falling below a threshold of 10° and 20° error.
 
 
