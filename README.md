@@ -16,4 +16,5 @@ Building a human pose detection system with the PoseNet model entailed dividing 
 <kbd>
 ![Capture](https://user-images.githubusercontent.com/32462270/117876193-12b78e00-b271-11eb-907d-939103d29c03.PNG)
 </kbd>
+<ins>Data Collection</ins>: Using PoseNet, when a pose would be detected, the 14-(x,y) inputs and target data would be fed into the neural network defined object. A setTimeout() function was used to record the poses for 5 seconds.
   
