@@ -20,3 +20,25 @@ Building a human pose detection system with the PoseNet model entailed dividing 
 <ins>Data Collection</ins>: Using PoseNet, when a pose would be detected, the 14-(x,y) inputs and target data would be fed into the neural network defined object. A setTimeout() function was used to record the poses for 5 seconds.
   
 <ins>Model Training</ins>: The existing data would be loaded into the JavaScript environment. Once the downloaded json file was attached to the model training file, the neural network was then trained across 50 epochs.
+<kbd>
+![Capture](https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG)
+</kbd>
+
+<ins>Model Testing</ins>: The model was trained by determining a better way to collect the angles based on specified points as well as a scoring system. For the scoring system, two comparisons were run. Firstly, the model compared the user’s chosen pose with the pose being performed on camera. The second comparison was dependant upon the first. The model then compared each incoming angle against some target angle determined as the average of all individual angles computed for each pose.
+
+## Performance Results:
+The performance of the model is quite promising. For poses such as ‘Mountain’ and ‘Warrior 2’, the results, when performed correctly, classifies the current pose. 
+<kbd>
+![Capture](https://user-images.githubusercontent.com/32462270/117877564-b6ee0480-b272-11eb-93fd-8fb7f19078b1.PNG)
+</kbd>
+
+Upon evaluation of the model, the model is able to classify the poses with an accuracy of 82.9%. Incorrect poses can be detected immediately, and outputs real-time feedback to the user with error indicators.
+<kbd>
+![Capture](https://user-images.githubusercontent.com/32462270/117877733-e7ce3980-b272-11eb-98da-895b47221104.PNG)
+</kbd>
+
+The performance of the model drops when the detection of keypoints fails. The scenarios include dark background or environment, as well as multiple users being in the frame of recording. The pose estimation uses a single-pose estimation model to perform data points collection, before being fed to the model classifier.
+
+  
+
+
