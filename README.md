@@ -22,6 +22,8 @@ Building a human pose detection system with the PoseNet model entailed dividing 
 <ins>Model Training</ins>: The existing data would be loaded into the JavaScript environment. Once the downloaded json file was attached to the model training file, the neural network was then trained across 50 epochs.\
 <p align="center">
 <kbd>
+<img width="460" height="300" src="https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG">
+  
 ![Capture](https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG)
 </kbd>
 </p>
