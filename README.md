@@ -19,7 +19,7 @@ Building a human pose detection system with the PoseNet model entailed dividing 
 
 <ins>Data Collection</ins>: Using PoseNet, when a pose would be detected, the 14-(x,y) inputs and target data would be fed into the neural network defined object. A setTimeout() function was used to record the poses for 5 seconds.
   
-<ins>Model Training</ins>: The existing data would be loaded into the JavaScript environment. Once the downloaded json file was attached to the model training file, the neural network was then trained across 50 epochs.\
+<ins>Model Training</ins>: The existing data would be loaded into the JavaScript environment. Once the downloaded json file was attached to the model training file, the neural network was then trained across 50 epochs.
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117877283-5f4f9900-b272-11eb-8116-76804aac5d36.PNG">
