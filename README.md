@@ -10,5 +10,10 @@ Recent advancements in Deep Learning has added a huge boost to the already rapid
 
 ## Approach:
 Building a human pose detection system with the PoseNet model entailed dividing the process into 3 steps: Data Collection, Model Training and Model Testing. 
+<kbd>
 ![Capture](https://user-images.githubusercontent.com/32462270/117875952-c5d3b780-b270-11eb-8ff0-0ff24d2180e9.PNG)
+</kbd>
+<kbd>
 ![Capture](https://user-images.githubusercontent.com/32462270/117876193-12b78e00-b271-11eb-907d-939103d29c03.PNG)
+</kbd>
+  
