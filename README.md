@@ -51,25 +51,25 @@ Attempt of performing ‘Tree’ pose with some computed angles falling below a 
 </kbd>
 </p>
 
+Attempt of performing ‘Goddess’ pose with some computed angles falling below margin of 20° error:
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117879399-ef8edd80-b274-11eb-9302-92032ace12a7.PNG">
 </kbd>
-Attempt of performing ‘Goddess’ pose with some computed angles falling below margin of 20° error.
 </p>
 
+Attempt of performing ‘Goddess’ pose with some computed angles falling below a threshold of 10° and 20° error:
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117879448-02091700-b275-11eb-9225-76db4fe4fe99.PNG">
 </kbd>
-Attempt of performing ‘Goddess’ pose with some computed angles falling below a threshold of 10° and 20° error.
 </p>
 
+Attempt of performing ‘Warrior 2’ pose with some computed angles falling below a threshold of 10° and 20° error:
 <p align="center">
 <kbd>
 <img src="https://user-images.githubusercontent.com/32462270/117879514-15b47d80-b275-11eb-8f1c-aaa991801432.PNG">
 </kbd>
-Attempt of performing ‘Warrior 2’ pose with some computed angles falling below a threshold of 10° and 20° error.
 </p>
 
 
